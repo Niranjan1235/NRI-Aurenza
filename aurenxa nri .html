@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRI Services — Aurenza Group · Architecture & Construction, Bengaluru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#b08d6a;--gold-light:#d4b896;--dark:#0f0f0f;--mid:#3a3a3a;
+  --muted:#888;--border:#e8e4de;--bg:#ffffff;--bg2:#f8f6f2;
+  --radius:6px;--nav-h:72px;
+}
+html{scroll-behavior:smooth;font-size:16px;overflow-x:hidden;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--dark);overflow-x:hidden;cursor:none;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;height:auto;}
+section{position:relative;}
+
+/* CURSOR */
+#cur{position:fixed;width:8px;height:8px;background:var(--dark);border-radius:50%;pointer-events:none;z-index:9999;transition:transform .15s,background .2s,width .2s,height .2s;transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;width:40px;height:40px;border:1px solid rgba(0,0,0,.2);border-radius:50%;pointer-events:none;z-index:9998;transition:border-color .3s;transform:translate(-50%,-50%);}
+.cur-big #cur{width:14px;height:14px;background:var(--gold);}
+.cur-big #cur-ring{width:60px;height:60px;border-color:rgba(176,141,106,.35);}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:800;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 72px;transition:background .4s,box-shadow .4s;}
+#nav.solid{background:rgba(255,255,255,.96);backdrop-filter:blur(20px);box-shadow:0 1px 0 var(--border);}
+.nav-logo{font-family:'Cormorant',serif;font-weight:600;font-size:1.5rem;letter-spacing:.04em;color:var(--dark);}
+.nav-logo sup{color:var(--gold);font-size:.65em;vertical-align:super;}
+.nav-links{display:flex;gap:40px;list-style:none;align-items:center;}
+.nav-links a{font-size:.72rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover{color:var(--dark);}
+.nav-links a:hover::after,
+.nav-active::after{width:100%!important;}
+.nav-active{color:var(--gold)!important;}
+.nav-cta-link{display:inline-flex;align-items:center;gap:8px;background:var(--dark);color:#fff!important;padding:10px 24px;border-radius:var(--radius);font-size:.72rem!important;letter-spacing:.1em!important;transition:background .25s!important;}
+.nav-cta-link:hover{background:var(--gold)!important;}
+.nav-cta-link::after{display:none!important;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:hidden;background:#fff;}
+.hero-text-block{position:relative;z-index:3;text-align:center;padding:0 64px;padding-top:calc(var(--nav-h) + 60px);padding-bottom:48px;width:100%;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:32px;opacity:0;animation:fadeUp .8s .2s forwards;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:28px;height:1px;background:var(--gold);}
+.hero-h1{font-family:'Cormorant',serif;font-size:clamp(3.5rem,8vw,8.5rem);font-weight:300;line-height:1.0;color:var(--dark);overflow:hidden;}
+.hero-h1-line{display:block;transform:translateY(110%);opacity:0;animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards;}
+.hero-h1-line:nth-child(1){animation-delay:.35s;}
+.hero-h1-line:nth-child(2){animation-delay:.5s;font-style:italic;color:var(--gold);}
+.hero-h1-line:nth-child(3){animation-delay:.65s;}
+.hero-sub{font-size:1rem;color:var(--muted);line-height:1.8;max-width:540px;margin:28px auto 0;opacity:0;animation:fadeUp .8s .85s forwards;font-weight:300;}
+.hero-btns{display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s 1s forwards;}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--dark);color:#fff;padding:15px 34px;border-radius:var(--radius);font-size:.82rem;font-weight:500;letter-spacing:.06em;transition:background .25s,transform .25s;}
+.btn-primary:hover{background:var(--gold);transform:translateY(-3px);}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border);color:var(--dark);padding:15px 34px;border-radius:var(--radius);font-size:.82rem;font-weight:400;letter-spacing:.06em;transition:border-color .25s,background .25s;}
+.btn-secondary:hover{border-color:var(--dark);background:var(--bg2);}
+
+/* FLOATING COUNTRY BADGES */
+.hero-badges{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
+.h-badge{position:absolute;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.6);padding:10px 16px;border-radius:var(--radius);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);white-space:nowrap;opacity:0;animation:badgePop .6s cubic-bezier(.34,1.56,.64,1) forwards;}
+.h-badge .flag{font-size:1rem;margin-right:6px;}
+.h-badge:nth-child(1){top:30%;left:4%;animation-delay:1.2s;}
+.h-badge:nth-child(2){top:20%;right:5%;animation-delay:1.4s;}
+.h-badge:nth-child(3){bottom:34%;left:2%;animation-delay:1.6s;}
+.h-badge:nth-child(4){bottom:28%;right:4%;animation-delay:1.8s;}
+.h-badge:nth-child(5){top:44%;right:2%;animation-delay:2s;}
+
+/* HERO IMAGE */
+.hero-image-wrap{width:100%;height:70vh;overflow:hidden;position:relative;opacity:0;animation:fadeUp 1s 1.1s forwards;}
+.hero-image-wrap img{width:100%;height:120%;object-fit:cover;object-position:center 25%;transform:translateY(0);will-change:transform;}
+.hero-image-meta{position:absolute;bottom:32px;right:40px;display:flex;gap:20px;}
+.hero-stat{background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.6);padding:14px 20px;border-radius:var(--radius);text-align:center;}
+.hero-stat .n{font-family:'Cormorant',serif;font-size:1.8rem;font-weight:600;color:var(--dark);line-height:1;}
+.hero-stat .l{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+.hero-scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);z-index:3;opacity:0;animation:fadeUp .8s 1.3s forwards;}
+.scroll-arrow{width:1px;height:40px;background:var(--border);position:relative;overflow:hidden;}
+.scroll-arrow::after{content:'';position:absolute;top:-100%;width:100%;height:100%;background:var(--gold);animation:scrollDrop 1.5s 1.5s ease infinite;}
+
+/* TICKER */
+.ticker-bar{overflow:hidden;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);}
+.ticker-track{display:flex;width:max-content;animation:ticker 34s linear infinite;}
+.ticker-item{display:flex;align-items:center;gap:18px;padding:0 32px;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:#aaa;white-space:nowrap;}
+.t-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+/* SECTION COMMONS */
+.sec{padding:120px 72px;}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:18px;}
+.sec-eyebrow::before{content:'';width:22px;height:1px;background:var(--gold);}
+.sec-h2{font-family:'Cormorant',serif;font-size:clamp(2.2rem,4vw,3.6rem);font-weight:300;line-height:1.15;color:var(--dark);}
+.sec-h2 em{font-style:italic;color:var(--gold);}
+.sec-p{font-size:.95rem;color:var(--muted);line-height:1.85;max-width:520px;font-weight:300;}
+
+/* REVEAL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(44px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+.reveal-left.in{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(60px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+.reveal-right.in{opacity:1;transform:translateX(0);}
+.reveal-delay-1{transition-delay:.1s;}
+.reveal-delay-2{transition-delay:.2s;}
+.reveal-delay-3{transition-delay:.3s;}
+.reveal-delay-4{transition-delay:.4s;}
+.reveal-delay-5{transition-delay:.5s;}
+
+/* WHY NRI */
+#why-nri{background:#fff;padding:140px 72px;}
+.why-layout{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;}
+.why-left .sec-h2{margin-bottom:28px;}
+.why-left .sec-p{margin-bottom:20px;max-width:100%;}
+.why-img-wrap{position:relative;}
+.why-img-main{width:100%;height:560px;object-fit:cover;border-radius:var(--radius);}
+.why-float-card{position:absolute;bottom:-28px;left:-28px;background:var(--dark);color:#fff;padding:28px 32px;border-radius:var(--radius);box-shadow:0 24px 60px rgba(0,0,0,.2);max-width:260px;}
+.why-float-card .wfc-n{font-family:'Cormorant',serif;font-size:3rem;font-weight:500;color:var(--gold);line-height:1;}
+.why-float-card .wfc-l{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:6px;line-height:1.6;}
+.why-float-card2{position:absolute;top:28px;right:-24px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border:1px solid var(--border);padding:18px 22px;border-radius:var(--radius);box-shadow:0 10px 40px rgba(0,0,0,.1);}
+.why-float-card2 .tag{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.why-float-card2 .val{font-family:'Cormorant',serif;font-size:1.2rem;font-weight:500;color:var(--dark);}
+
+/* CHALLENGES */
+#challenges{background:var(--bg2);padding:120px 72px;}
+.challenges-header{text-align:center;max-width:640px;margin:0 auto 80px;}
+.challenges-header .sec-eyebrow{justify-content:center;}
+.challenges-header .sec-eyebrow::before{display:none;}
+.chal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);}
+.chal-card{background:#fff;padding:48px 36px;position:relative;overflow:hidden;transition:background .35s;cursor:default;}
+.chal-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.chal-card:hover::after{transform:scaleX(1);}
+.chal-card:hover{background:var(--bg2);}
+.chal-icon{width:52px;height:52px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:28px;font-size:22px;transition:border-color .3s,background .3s;}
+.chal-card:hover .chal-icon{border-color:var(--gold);background:rgba(176,141,106,.08);}
+.chal-n{font-family:'Cormorant',serif;font-size:.85rem;color:var(--gold);font-weight:400;letter-spacing:.06em;margin-bottom:10px;}
+.chal-title{font-family:'Cormorant',serif;font-size:1.5rem;font-weight:300;color:var(--dark);margin-bottom:14px;line-height:1.25;}
+.chal-desc{font-size:.85rem;color:var(--muted);line-height:1.75;font-weight:300;}
+
+/* SERVICES */
+#nri-services{background:#fff;padding:120px 72px;}
+.svc-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:72px;}
+.svc-rows{border-top:1px solid var(--border);}
+.svc-row{display:grid;grid-template-columns:56px 1fr 160px 48px;align-items:center;gap:32px;padding:36px 0;border-bottom:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:padding .3s;}
+.svc-row::before{content:'';position:absolute;left:0;top:0;width:0;height:100%;background:rgba(176,141,106,.06);transition:width .5s ease;}
+.svc-row:hover::before{width:100%;}
+.svc-row>*{position:relative;z-index:1;}
+.svc-n{font-family:'Cormorant',serif;font-size:1rem;color:var(--gold);font-weight:400;letter-spacing:.04em;}
+.svc-body h3{font-family:'Cormorant',serif;font-size:2rem;font-weight:300;color:var(--dark);transition:color .25s;}
+.svc-row:hover .svc-body h3{color:var(--gold);}
+.svc-body p{font-size:.85rem;color:var(--muted);line-height:1.7;margin-top:6px;font-weight:300;}
+.svc-thumb{width:160px;height:100px;object-fit:cover;border-radius:4px;opacity:0;transform:scale(.96);transition:opacity .35s,transform .35s;flex-shrink:0;}
+.svc-row:hover .svc-thumb{opacity:1;transform:scale(1);}
+.svc-arrow{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .25s;flex-shrink:0;}
+.svc-row:hover .svc-arrow{background:var(--dark);border-color:var(--dark);color:#fff;transform:rotate(45deg);}
+
+/* TRUST STATS */
+.trust-band{background:var(--bg2);padding:80px 72px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.trust-item{background:var(--bg2);padding:40px 32px;text-align:center;transition:background .3s;}
+.trust-item:hover{background:#fff;}
+.trust-n{font-family:'Cormorant',serif;font-size:3rem;font-weight:500;color:var(--dark);line-height:1;}
+.trust-n span{color:var(--gold);}
+.trust-l{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:8px;line-height:1.6;}
+
+/* PROCESS */
+#nri-process{background:var(--dark);padding:140px 72px;}
+.process-layout{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;}
+.proc-left .sec-h2{color:#fff;margin-bottom:16px;}
+.proc-left .sec-p{color:#777;max-width:100%;margin-bottom:56px;}
+.proc-steps{border-top:1px solid rgba(255,255,255,.08);}
+.proc-step{display:flex;gap:24px;padding:28px 0;border-bottom:1px solid rgba(255,255,255,.08);cursor:pointer;}
+.proc-step:hover .ps-title{color:var(--gold);}
+.ps-num{font-family:'Cormorant',serif;font-size:.9rem;color:var(--gold);font-weight:400;min-width:30px;padding-top:2px;}
+.ps-title{font-family:'Cormorant',serif;font-size:1.4rem;font-weight:300;color:#fff;margin-bottom:6px;transition:color .2s;}
+.ps-desc{font-size:.85rem;color:#666;line-height:1.7;font-weight:300;}
+.proc-right{position:relative;}
+.proc-img{width:100%;height:580px;object-fit:cover;border-radius:var(--radius);}
+.proc-badge{position:absolute;bottom:-24px;left:-24px;background:#fff;padding:20px 24px;border-radius:var(--radius);box-shadow:0 16px 48px rgba(0,0,0,.15);}
+.proc-badge .pbn{font-family:'Cormorant',serif;font-size:2.2rem;font-weight:500;color:var(--dark);line-height:1;}
+.proc-badge .pbl{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+
+/* GLOBAL REACH */
+#global-reach{background:#fff;padding:120px 72px;}
+.reach-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.map-visual{position:relative;background:var(--bg2);border-radius:var(--radius);overflow:hidden;height:420px;display:flex;align-items:center;justify-content:center;}
+.map-svg-wrap{width:90%;opacity:.75;}
+.map-pulse{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--gold);}
+.map-pulse::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1.5px solid var(--gold);opacity:.5;animation:pulseRing 2s ease-out infinite;}
+.map-pulse::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px solid var(--gold);opacity:.25;animation:pulseRing 2s .5s ease-out infinite;}
+.mp-blr{bottom:30%;right:27%;}
+.mp-dxb{top:42%;right:15%;}
+.mp-sin{bottom:22%;right:7%;}
+.mp-lon{top:20%;left:36%;}
+.mp-nyc{top:26%;left:10%;}
+.mp-tor{top:18%;left:14%;}
+.country-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:36px;}
+.country-item{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius);transition:border-color .25s,background .25s,transform .25s;cursor:default;}
+.country-item:hover{border-color:var(--gold);background:rgba(176,141,106,.04);transform:translateY(-2px);}
+.ci-flag{font-size:1.4rem;flex-shrink:0;}
+.ci-info .ci-name{font-size:.88rem;font-weight:500;color:var(--dark);}
+.ci-info .ci-count{font-size:.72rem;color:var(--muted);margin-top:2px;letter-spacing:.04em;}
+
+/* QUOTE BAND */
+#quoteBand{position:relative;height:500px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.quote-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1800&q=80&auto=format&fit=crop');background-size:cover;background-position:center;transform:scale(1.15);will-change:transform;}
+.quote-overlay{position:absolute;inset:0;background:rgba(10,10,10,.65);}
+.quote-text{position:relative;z-index:2;text-align:center;padding:0 100px;max-width:860px;}
+.quote-text blockquote{font-family:'Cormorant',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:300;font-style:italic;color:#fff;line-height:1.4;}
+.quote-text cite{display:block;margin-top:28px;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-light);font-style:normal;}
+
+/* TESTIMONIALS */
+#nri-testimonials{background:#fff;padding:120px 72px;}
+.testi-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;}
+.testi-wrap{position:relative;overflow:hidden;}
+.testi-track{display:flex;gap:24px;transition:transform .65s cubic-bezier(.4,0,.2,1);}
+.tcard{flex:0 0 calc(50% - 12px);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:44px;min-width:0;}
+.tcard-origin{display:inline-flex;align-items:center;gap:8px;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;background:rgba(176,141,106,.1);color:var(--gold);padding:5px 12px;border-radius:2px;margin-bottom:20px;}
+.tcard-stars{color:var(--gold);font-size:14px;margin-bottom:20px;letter-spacing:2px;}
+.tcard-quote{font-family:'Cormorant',serif;font-size:1.15rem;font-style:italic;font-weight:300;color:#333;line-height:1.8;margin-bottom:28px;}
+.tcard-author{display:flex;align-items:center;gap:14px;}
+.tcard-av{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border);}
+.tcard-name{font-size:.88rem;font-weight:500;color:var(--dark);}
+.tcard-role{font-size:.75rem;color:var(--muted);margin-top:2px;}
+.testi-nav{display:flex;gap:10px;}
+.tbn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s,border-color .2s;}
+.tbn:hover{background:var(--dark);border-color:var(--dark);color:#fff;}
+
+/* DARK TICKER */
+.dark-ticker{overflow:hidden;padding:30px 0;background:var(--dark);}
+.dark-ticker-track{display:flex;width:max-content;animation:ticker 36s linear infinite;}
+.dark-ticker-item{display:flex;align-items:center;gap:24px;padding:0 44px;font-family:'Cormorant',serif;font-size:1.6rem;font-weight:300;font-style:italic;color:rgba(255,255,255,.16);white-space:nowrap;}
+.dt-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+/* FAQ */
+#nri-faq{background:var(--bg2);padding:120px 72px;}
+.faq-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:100px;align-items:start;}
+.faq-left .sec-p{margin-top:20px;margin-bottom:40px;}
+.faq-list{border-top:1px solid var(--border);}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:22px 0;cursor:pointer;gap:20px;}
+.faq-q h4{font-size:.92rem;font-weight:400;color:var(--dark);line-height:1.5;flex:1;transition:color .2s;}
+.faq-item.open .faq-q h4{color:var(--gold);}
+.faq-icon{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:var(--muted);transition:all .3s;}
+.faq-item.open .faq-icon{background:var(--dark);border-color:var(--dark);color:#fff;transform:rotate(45deg);}
+.faq-body{max-height:0;overflow:hidden;transition:max-height .45s ease;}
+.faq-item.open .faq-body{max-height:200px;}
+.faq-body p{font-size:.87rem;color:var(--muted);line-height:1.8;padding-bottom:22px;font-weight:300;}
+/* COST CALCULATOR */
+/* MODAL BACKGROUND */
+.calc-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10,10,10,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .4s ease;
+  z-index: 9999;
+}
+
+/* ACTIVE STATE */
+.calc-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* MODAL BOX */
+.calc-modal-box {
+  background: var(--bg2);
+  padding: 40px;
+  width: 420px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transform: translateY(40px);
+  transition: all .4s ease;
+}
+
+.calc-modal.active .calc-modal-box {
+  transform: translateY(0);
+}
+
+/* CLOSE BUTTON */
+.calc-close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--gold);
+}
+
+/* FIELDS (reuse your style) */
+.calc-field {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.calc-field input,
+.calc-field select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.calc-result {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.calc-value {
+  font-family: 'Cormorant', serif;
+  font-size: 2rem;
+  color: var(--gold);
+}
+/* CTA */
+#cta{background:var(--dark);padding:140px 72px;text-align:center;position:relative;overflow:hidden;}
+#cta::before{content:'NRI';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant',serif;font-size:32vw;font-weight:300;color:rgba(255,255,255,.025);letter-spacing:.04em;white-space:nowrap;line-height:1;pointer-events:none;}
+#cta .sec-eyebrow{justify-content:center;margin:0 auto 20px;}
+#cta .sec-eyebrow::before{display:none;}
+#cta .sec-h2{color:#fff;margin-bottom:20px;font-size:clamp(2.5rem,6vw,5.5rem);}
+#cta .sec-p{color:#666;margin:0 auto 48px;text-align:center;max-width:480px;}
+.btn-gold{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#fff;padding:15px 36px;border-radius:var(--radius);font-size:.82rem;font-weight:500;letter-spacing:.06em;transition:background .25s,transform .25s;}
+.btn-gold:hover{background:#c9a07d;transform:translateY(-3px);}
+.btn-ghost-white{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.2);color:#fff;padding:15px 36px;border-radius:var(--radius);font-size:.82rem;font-weight:300;letter-spacing:.06em;transition:border-color .25s,background .25s;}
+.btn-ghost-white:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);}
+.cta-contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:860px;margin:60px auto 0;}
+.cta-contact-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:28px 24px;transition:background .3s,border-color .3s;}
+.cta-contact-card:hover{background:rgba(255,255,255,.08);border-color:rgba(176,141,106,.3);}
+.ccc-label{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;}
+.ccc-val{font-family:'Cormorant',serif;font-size:1.1rem;color:#fff;font-weight:300;}
+.ccc-sub{font-size:.75rem;color:#555;margin-top:4px;}
+
+/* FOOTER */
+footer{background:#090909;padding:80px 72px 0;}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;padding-bottom:60px;border-bottom:1px solid rgba(255,255,255,.06);}
+.foot-brand{display:block;font-family:'Cormorant',serif;font-weight:600;font-size:1.5rem;letter-spacing:.04em;color:#fff;margin-bottom:14px;}
+.foot-brand sup{color:var(--gold);font-size:.6em;vertical-align:super;}
+.foot-desc{font-size:.83rem;color:#555;line-height:1.8;max-width:250px;font-weight:300;}
+.foot-social{display:flex;gap:10px;margin-top:24px;}
+.fsoc{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#555;transition:all .2s;}
+.fsoc:hover{border-color:var(--gold);color:var(--gold);}
+.foot-col h5{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px;font-weight:500;}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.foot-col a{font-size:.83rem;color:#555;transition:color .2s;font-weight:300;}
+.foot-col a:hover{color:#fff;}
+.foot-bar{display:flex;justify-content:space-between;align-items:center;padding:22px 0;font-size:.72rem;color:rgba(255,255,255,.2);}
+.foot-bar a{color:rgba(255,255,255,.2);transition:color .2s;}
+.foot-bar a:hover{color:rgba(255,255,255,.5);}
+.foot-bar-links{display:flex;gap:24px;}
+
+/* WA */
+.wa-btn{position:fixed;bottom:28px;right:28px;z-index:700;width:54px;height:54px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,.38);transition:transform .2s;}
+.wa-btn:hover{transform:scale(1.1);}
+.wa-btn svg{width:24px;height:24px;fill:currentColor;}
+
+/* KEYFRAMES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideUp{from{transform:translateY(110%);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@keyframes scrollDrop{0%{top:-100%;}100%{top:200%;}}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes badgePop{from{opacity:0;transform:scale(.8);}to{opacity:1;transform:scale(1);}}
+@keyframes pulseRing{0%{transform:scale(1);opacity:.5;}100%{transform:scale(2.5);opacity:0;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  :root{--nav-h:64px;}
+  #nav,#why-nri,#challenges,#nri-services,.trust-band,#nri-process,#global-reach,#nri-testimonials,#nri-faq,#cta,footer{padding-left:40px;padding-right:40px;}
+  .why-layout,.process-layout,.faq-layout,.reach-layout{grid-template-columns:1fr;gap:60px;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:40px;}
+  .svc-row{grid-template-columns:48px 1fr 48px;}
+  .svc-thumb{display:none;}
+  .chal-grid{grid-template-columns:1fr 1fr;}
+  .trust-grid{grid-template-columns:repeat(2,1fr);}
+  .country-list{grid-template-columns:1fr;}
+  .cta-contact-grid{grid-template-columns:1fr;}
+}
+@media(max-width:700px){
+  #nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .hero-text-block{padding:calc(var(--nav-h)+40px) 20px 36px;}
+  #why-nri,#challenges,#nri-services,.trust-band,#nri-process,#global-reach,#nri-testimonials,#nri-faq,#cta,footer{padding-left:20px;padding-right:20px;}
+  .chal-grid{grid-template-columns:1fr;}
+  .tcard{flex:0 0 100%;}
+  .foot-grid{grid-template-columns:1fr;gap:32px;}
+  .foot-bar{flex-direction:column;gap:10px;text-align:center;}
+  .trust-grid{grid-template-columns:repeat(2,1fr);}
+  .h-badge:nth-child(n+3){display:none;}
+  .quote-text{padding:0 24px;}
+  .hero-image-meta{right:16px;bottom:16px;gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="aurenza_group_final.html" class="nav-logo">Aurenza<sup>®</sup></a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Projects</a></li>
+    <li><a href="#">Services</a></li>
+    <li><a href="#" class="nav-active">NRI Services</a></li>
+    <li><a href="aurenza_group_final.html#faq">FAQ</a></li>
+    <li><a href="https://wa.me/919606634536?text=Hi%20Aurenza%20Group,%20I%20am%20interested%20in%20your%20services" class="nav-cta-link">Get a Quote ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badges" aria-hidden="true">
+    <div class="h-badge"><span class="flag">🇦🇪</span> Dubai</div>
+    <div class="h-badge"><span class="flag">🇺🇸</span> United States</div>
+    <div class="h-badge"><span class="flag">🇸🇬</span> Singapore</div>
+    <div class="h-badge"><span class="flag">🇬🇧</span> United Kingdom</div>
+    <div class="h-badge"><span class="flag">🇨🇦</span> Canada</div>
+  </div>
+  <div class="hero-text-block">
+    <div class="hero-eyebrow">NRI Services · Aurenza Group · Bengaluru</div>
+    <h1 class="hero-h1">
+      <span class="hero-h1-line">Your Dream Home</span>
+      <span class="hero-h1-line">Back in India,</span>
+      <span class="hero-h1-line">Beautifully Built.</span>
+    </h1>
+    <p class="hero-sub">Living abroad shouldn't mean compromising on your home in Bengaluru. We handle every detail — design, approvals, construction, and handover — so you never have to worry.</p>
+    <div class="hero-btns">
+      <a href="#cta" class="btn-primary">Book a Free Consultation →</a>
+      <a href="#" class="btn-secondary" id="openCalc">Calculate the cost</a>
+    </div>
+  </div>
+  <div class="hero-image-wrap" id="heroImg">
+    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=85&auto=format&fit=crop" alt="Luxury Bengaluru residence built for NRI client by Aurenza" id="heroImgEl">
+    <div class="hero-image-meta">
+      <div class="hero-stat"><div class="n">120+</div><div class="l">NRI Projects</div></div>
+      <div class="hero-stat"><div class="n">30+</div><div class="l">Countries</div></div>
+      <div class="hero-stat"><div class="n">100%</div><div class="l">Remote-Ready</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll-cue">
+    <div class="scroll-arrow"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="t-dot"></span>Remote-Managed Projects</div>
+    <div class="ticker-item"><span class="t-dot"></span>BBMP &amp; RERA Compliance</div>
+    <div class="ticker-item"><span class="t-dot"></span>Transparent Cost Reports</div>
+    <div class="ticker-item"><span class="t-dot"></span>WhatsApp &amp; Video Updates</div>
+    <div class="ticker-item"><span class="t-dot"></span>NRI-Friendly Legal Guidance</div>
+    <div class="ticker-item"><span class="t-dot"></span>Dedicated NRI Project Manager</div>
+    <div class="ticker-item"><span class="t-dot"></span>Trusted Since 2004</div>
+    <div class="ticker-item"><span class="t-dot"></span>Koramangala · Indiranagar · Whitefield · Sarjapur</div>
+    <div class="ticker-item"><span class="t-dot"></span>Remote-Managed Projects</div>
+    <div class="ticker-item"><span class="t-dot"></span>BBMP &amp; RERA Compliance</div>
+    <div class="ticker-item"><span class="t-dot"></span>Transparent Cost Reports</div>
+    <div class="ticker-item"><span class="t-dot"></span>WhatsApp &amp; Video Updates</div>
+    <div class="ticker-item"><span class="t-dot"></span>NRI-Friendly Legal Guidance</div>
+    <div class="ticker-item"><span class="t-dot"></span>Dedicated NRI Project Manager</div>
+    <div class="ticker-item"><span class="t-dot"></span>Trusted Since 2004</div>
+    <div class="ticker-item"><span class="t-dot"></span>Koramangala · Indiranagar · Whitefield · Sarjapur</div>
+  </div>
+</div>
+
+<!-- WHY NRI -->
+<section id="why-nri">
+  <div class="why-layout">
+    <div class="why-left reveal-left">
+      <span class="sec-eyebrow">Built For You, From Anywhere</span>
+      <h2 class="sec-h2">Building in India<br>While Living <em>Abroad</em></h2>
+      <p class="sec-p" style="margin-top:24px;">Thousands of NRIs across the globe dream of building or renovating their home in Bengaluru — a place to return to, invest in, or gift to family. But distance creates very real challenges: unreliable contractors, opaque billing, missed timelines, and no single person held accountable.</p>
+      <p class="sec-p" style="margin-top:16px;">Aurenza was built to solve exactly this. With a dedicated NRI desk, end-to-end project management, and real-time digital transparency, your project runs as if you're right here — even if you're in Dubai, London, or New York.</p>
+      <div style="margin-top:44px;display:flex;gap:16px;flex-wrap:wrap;">
+        <a href="#cta" class="btn-primary">Book a Free Consultation →</a>
+        <a href="#nri-services" class="btn-secondary">See Our Services</a>
+      </div>
+    </div>
+    <div class="why-img-wrap reveal-right">
+      <img class="why-img-main" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=85&auto=format&fit=crop" alt="Premium interior crafted by Aurenza">
+      <div class="why-float-card">
+        <div class="wfc-n">100%</div>
+        <div class="wfc-l">Remote project management — no site visits required from you</div>
+      </div>
+      <div class="why-float-card2">
+        <div class="tag">On-Time Delivery</div>
+        <div class="val">96% of NRI projects<br>delivered on schedule</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHALLENGES -->
+<section id="challenges">
+  <div class="challenges-header">
+    <span class="sec-eyebrow">Why NRIs Choose Us</span>
+    <h2 class="sec-h2 reveal">We Solve the Real<br><em>NRI Challenges</em></h2>
+    <p class="sec-p reveal" style="margin:16px auto 0;text-align:center;max-width:580px;">Every challenge an NRI faces when building in India — we've encountered it, solved it, and built a proven system around it.</p>
+  </div>
+  <div class="chal-grid">
+    <div class="chal-card reveal">
+      <div class="chal-icon">🔍</div>
+      <div class="chal-n">01</div>
+      <h3 class="chal-title">Zero Visibility Into Your Site</h3>
+      <p class="chal-desc">You can't be on site every day. We solve this with weekly video walkthroughs, live photo logs, and a dedicated WhatsApp channel — so you always see exactly what's happening.</p>
+    </div>
+    <div class="chal-card reveal reveal-delay-1">
+      <div class="chal-icon">📋</div>
+      <div class="chal-n">02</div>
+      <h3 class="chal-title">Opaque Billing & Hidden Costs</h3>
+      <p class="chal-desc">Every rupee is accounted for. We provide detailed, itemised cost breakdowns before work begins and send monthly financial updates throughout — no surprises, ever.</p>
+    </div>
+    <div class="chal-card reveal reveal-delay-2">
+      <div class="chal-icon">📜</div>
+      <div class="chal-n">03</div>
+      <h3 class="chal-title">Legal & Regulatory Complexity</h3>
+      <p class="chal-desc">BBMP approvals, RERA registration, Khata transfers, and occupancy certificates — our in-house team navigates every regulatory requirement so you don't have to.</p>
+    </div>
+    <div class="chal-card reveal reveal-delay-3">
+      <div class="chal-icon">🤝</div>
+      <div class="chal-n">04</div>
+      <h3 class="chal-title">Unreliable Contractors</h3>
+      <p class="chal-desc">Our construction teams are in-house employees, not outsourced labour. Every project has a dedicated site engineer who is directly accountable to your project manager.</p>
+    </div>
+    <div class="chal-card reveal reveal-delay-4">
+      <div class="chal-icon">⏱️</div>
+      <div class="chal-n">05</div>
+      <h3 class="chal-title">Missed Timelines</h3>
+      <p class="chal-desc">We commit to a detailed construction schedule from day one. Milestones are tracked digitally and you're notified when each phase completes — and when the next begins.</p>
+    </div>
+    <div class="chal-card reveal reveal-delay-5">
+      <div class="chal-icon">🌐</div>
+      <div class="chal-n">06</div>
+      <h3 class="chal-title">Time-Zone Communication Gaps</h3>
+      <p class="chal-desc">Your dedicated NRI project manager adapts to your time zone, responds within 24 hours, and provides structured weekly updates that fit your life abroad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NRI SERVICES -->
+<section id="nri-services">
+  <div class="svc-header">
+    <div>
+      <span class="sec-eyebrow">What We Offer</span>
+      <h2 class="sec-h2 reveal">End-to-End Services<br><em>Tailored for NRIs</em></h2>
+    </div>
+    <p class="sec-p reveal" style="max-width:360px;">From the first design consultation to handing over the keys — every stage, every detail, every relationship — managed by us.</p>
+  </div>
+  <div class="svc-rows">
+    <div class="svc-row reveal">
+      <div class="svc-n">01</div>
+      <div class="svc-body">
+        <h3>Architecture & Design</h3>
+        <p>Custom residential architecture tailored to your lifestyle. Design sessions over video call, 3D renders and walkthroughs shared digitally, and digital sign-off at every stage.</p>
+      </div>
+      <img class="svc-thumb" src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=400&q=80" alt="Architecture">
+      <div class="svc-arrow">↗</div>
+    </div>
+    <div class="svc-row reveal">
+      <div class="svc-n">02</div>
+      <div class="svc-body">
+        <h3>Full Construction Management</h3>
+        <p>Our in-house construction teams handle the entire build — foundation to finish. Your project manager reports directly to you, with photo and video updates at every milestone.</p>
+      </div>
+      <img class="svc-thumb" src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=80" alt="Construction">
+      <div class="svc-arrow">↗</div>
+    </div>
+    <div class="svc-row reveal">
+      <div class="svc-n">03</div>
+      <div class="svc-body">
+        <h3>Interior Design & Fit-Out</h3>
+        <p>From furniture selection to material finishes, our design team curates interiors that feel like you — and fully manages execution. All samples shared digitally for your approval.</p>
+      </div>
+      <img class="svc-thumb" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&q=80" alt="Interiors">
+      <div class="svc-arrow">↗</div>
+    </div>
+    <div class="svc-row reveal">
+      <div class="svc-n">04</div>
+      <div class="svc-body">
+        <h3>Legal, Approvals & Documentation</h3>
+        <p>BBMP plan sanctions, RERA registration, Khata, OC, PAN/Aadhaar-linked property matters — our legal team handles every document and approval on your behalf.</p>
+      </div>
+      <img class="svc-thumb" src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&q=80" alt="Legal">
+      <div class="svc-arrow">↗</div>
+    </div>
+    <div class="svc-row reveal">
+      <div class="svc-n">05</div>
+      <div class="svc-body">
+        <h3>Renovation & Retrofitting</h3>
+        <p>Upgrading an existing property? We assess, plan, and execute renovations with the same rigour as new builds — complete with condition reports and a fixed renovation budget.</p>
+      </div>
+      <img class="svc-thumb" src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&q=80" alt="Renovation">
+      <div class="svc-arrow">↗</div>
+    </div>
+    <div class="svc-row reveal">
+      <div class="svc-n">06</div>
+      <div class="svc-body">
+        <h3>Property Management (Post-Handover)</h3>
+        <p>Once your home is ready, we continue managing it — maintenance schedules, tenant coordination, utility management, and regular property condition reports, all handled remotely.</p>
+      </div>
+      <img class="svc-thumb" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80" alt="Property Management">
+      <div class="svc-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STATS -->
+<div class="trust-band">
+  <div class="trust-grid">
+    <div class="trust-item reveal">
+      <div class="trust-n">120<span>+</span></div>
+      <div class="trust-l">NRI Projects<br>Completed</div>
+    </div>
+    <div class="trust-item reveal reveal-delay-1">
+      <div class="trust-n">30<span>+</span></div>
+      <div class="trust-l">Countries<br>Our Clients Live In</div>
+    </div>
+    <div class="trust-item reveal reveal-delay-2">
+      <div class="trust-n">96<span>%</span></div>
+      <div class="trust-l">On-Time Delivery<br>Rate</div>
+    </div>
+    <div class="trust-item reveal reveal-delay-3">
+      <div class="trust-n">₹0</div>
+      <div class="trust-l">Hidden Costs —<br>Ever</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<section id="nri-process">
+  <div class="process-layout">
+    <div class="proc-left">
+      <span class="sec-eyebrow" style="color:var(--gold-light);">How We Work</span>
+      <h2 class="sec-h2 reveal" style="color:#fff;">A Clear Process,<br><em>Zero Surprises</em></h2>
+      <p class="sec-p reveal">Designed around one principle: you should feel in complete control, even from 5,000 miles away. Here's how every Aurenza NRI project runs.</p>
+      <div class="proc-steps">
+        <div class="proc-step reveal">
+          <div class="ps-num">01</div>
+          <div>
+            <div class="ps-title">Free Discovery Call</div>
+            <p class="ps-desc">A 45-minute video consultation — your brief, timeline, budget, and vision. No obligations, no sales pressure.</p>
+          </div>
+        </div>
+        <div class="proc-step reveal">
+          <div class="ps-num">02</div>
+          <div>
+            <div class="ps-title">Concept Design & 3D Walkthrough</div>
+            <p class="ps-desc">Initial concepts, floor plans, and a 3D walkthrough shared digitally. Review, comment, and approve — entirely remotely.</p>
+          </div>
+        </div>
+        <div class="proc-step reveal">
+          <div class="ps-num">03</div>
+          <div>
+            <div class="ps-title">Fixed Quotation & Legal Setup</div>
+            <p class="ps-desc">A detailed, itemised cost breakdown is signed and locked. All regulatory approvals filed in Bengaluru on your behalf simultaneously.</p>
+          </div>
+        </div>
+        <div class="proc-step reveal">
+          <div class="ps-num">04</div>
+          <div>
+            <div class="ps-title">Construction with Weekly Updates</div>
+            <p class="ps-desc">Site work begins. Weekly video walkthroughs, progress photos, and milestone sign-offs via WhatsApp and email.</p>
+          </div>
+        </div>
+        <div class="proc-step reveal">
+          <div class="ps-num">05</div>
+          <div>
+            <div class="ps-title">Keys Handover & Punch List</div>
+            <p class="ps-desc">A thorough punch-list inspection before handover. All snags resolved. Keys delivered — in person or with full digital documentation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="proc-right reveal-right">
+      <img class="proc-img" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=85&auto=format&fit=crop" alt="Aurenza construction quality">
+      <div class="proc-badge">
+        <div class="pbn">20yr</div>
+        <div class="pbl">Trusted in Bengaluru<br>since 2004</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOBAL REACH -->
+<section id="global-reach">
+  <div class="reach-layout">
+    <div class="reveal-left">
+      <div class="map-visual">
+        <svg class="map-svg-wrap" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Simplified continent shapes -->
+          <path d="M60,120 C90,100 150,90 200,100 C240,108 260,95 290,100 C310,105 320,120 310,140 C295,165 270,175 240,165 C200,148 160,155 120,158 C95,160 65,148 60,135Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <path d="M55,175 C85,168 130,165 165,172 C190,178 205,170 225,175 C245,180 258,194 250,210 C238,230 215,238 190,233 C162,227 138,235 110,232 C85,229 55,218 52,200Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <path d="M335,80 C358,64 400,58 432,68 C458,76 468,68 483,74 C498,80 502,96 492,112 C479,130 456,133 430,128 C405,123 374,130 354,122 C338,115 330,96 335,80Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <path d="M380,148 C402,138 434,135 452,145 C468,154 472,168 460,180 C445,195 420,200 400,194 C380,188 368,172 373,158Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <path d="M340,185 C360,175 395,172 415,182 C432,191 436,208 424,222 C408,240 382,245 360,238 C338,230 328,213 335,198Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <!-- India highlight -->
+          <path d="M548,148 C568,140 594,140 612,152 C628,163 630,178 620,192 C606,210 582,217 560,209 C540,202 530,186 535,168 C539,157 547,151 548,148Z" stroke="rgba(176,141,106,.7)" stroke-width="2" fill="rgba(176,141,106,.18)"/>
+          <!-- SE Asia -->
+          <path d="M635,155 C655,148 685,146 702,157 C718,167 720,182 708,194 C694,208 668,213 645,207 C623,201 614,185 618,168Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <!-- Australia -->
+          <path d="M655,255 C678,244 715,242 735,256 C752,268 752,286 736,298 C718,312 688,316 665,308 C643,300 635,280 642,265Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+          <!-- Middle East -->
+          <path d="M462,128 C482,118 515,116 538,126 C558,134 565,150 552,162 C535,176 508,178 488,170 C468,162 453,145 462,128Z" stroke="#e8e4de" stroke-width="1.5" fill="rgba(176,141,106,.06)"/>
+        </svg>
+        <!-- Pulse dots -->
+        <div class="map-pulse mp-blr" style="bottom:32%;right:26%;"></div>
+        <div class="map-pulse mp-dxb" style="top:40%;right:14%;"></div>
+        <div class="map-pulse mp-sin" style="bottom:24%;right:8%;"></div>
+        <div class="map-pulse mp-lon" style="top:22%;left:37%;"></div>
+        <div class="map-pulse mp-nyc" style="top:28%;left:10%;"></div>
+        <div class="map-pulse mp-tor" style="top:20%;left:14%;"></div>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <span class="sec-eyebrow">Our Global NRI Network</span>
+      <h2 class="sec-h2">Wherever You Are,<br>We're <em>With You</em></h2>
+      <p class="sec-p" style="margin-top:20px;margin-bottom:36px;">Our NRI clients live across the world. We've refined our communication, digital workflows, and reporting to serve every major time zone — with zero friction.</p>
+      <div class="country-list">
+        <div class="country-item reveal">
+          <div class="ci-flag">🇦🇪</div>
+          <div class="ci-info"><div class="ci-name">UAE & Gulf</div><div class="ci-count">Dubai · Abu Dhabi · Riyadh · Doha</div></div>
+        </div>
+        <div class="country-item reveal reveal-delay-1">
+          <div class="ci-flag">🇺🇸</div>
+          <div class="ci-info"><div class="ci-name">United States</div><div class="ci-count">New York · Bay Area · Chicago · Houston</div></div>
+        </div>
+        <div class="country-item reveal reveal-delay-2">
+          <div class="ci-flag">🇬🇧</div>
+          <div class="ci-info"><div class="ci-name">United Kingdom</div><div class="ci-count">London · Manchester · Birmingham</div></div>
+        </div>
+        <div class="country-item reveal reveal-delay-3">
+          <div class="ci-flag">🇸🇬</div>
+          <div class="ci-info"><div class="ci-name">Singapore & SE Asia</div><div class="ci-count">Singapore · Malaysia · Thailand</div></div>
+        </div>
+        <div class="country-item reveal reveal-delay-4">
+          <div class="ci-flag">🇨🇦</div>
+          <div class="ci-info"><div class="ci-name">Canada</div><div class="ci-count">Toronto · Vancouver · Calgary</div></div>
+        </div>
+        <div class="country-item reveal reveal-delay-5">
+          <div class="ci-flag">🇦🇺</div>
+          <div class="ci-info"><div class="ci-name">Australia</div><div class="ci-count">Sydney · Melbourne · Brisbane</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE BAND -->
+<section id="quoteBand">
+  <div class="quote-bg" id="quoteBg"></div>
+  <div class="quote-overlay"></div>
+  <div class="quote-text reveal">
+    <blockquote>"We were in Dubai and needed someone we could genuinely trust to build our home in Bengaluru. Aurenza gave us complete transparency, zero stress, and a home that exceeded every expectation."</blockquote>
+    <cite>— Rohan &amp; Priya Mehta, Dubai · Villa, Whitefield, Bengaluru</cite>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="nri-testimonials">
+  <div class="testi-header">
+    <div>
+      <span class="sec-eyebrow">Client Stories</span>
+      <h2 class="sec-h2 reveal">Heard From<br><em>Around the World</em></h2>
+    </div>
+    <div class="testi-nav">
+      <button class="tbn" id="tPrev" aria-label="Previous">←</button>
+      <button class="tbn" id="tNext" aria-label="Next">→</button>
+    </div>
+  </div>
+  <div class="testi-wrap">
+    <div class="testi-track" id="tTrack">
+      <div class="tcard">
+        <div class="tcard-origin">🇦🇪 Dubai, UAE</div>
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-quote">"Not a single surprise from concept to handover. Weekly video calls and itemised billing gave us complete peace of mind. Our 4,200 sq ft villa in Sarjapur was delivered exactly on schedule."</p>
+        <div class="tcard-author">
+          <img class="tcard-av" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80" alt="Vikram S.">
+          <div>
+            <div class="tcard-name">Vikram Subramaniam</div>
+            <div class="tcard-role">CFO · Dubai · Villa, Sarjapur Road</div>
+          </div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-origin">🇺🇸 California, USA</div>
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-quote">"I was sceptical about building from the US. Aurenza's NRI manager sent video updates every Friday without fail. The 3D renders matched the finished home exactly. Genuinely exceptional work."</p>
+        <div class="tcard-author">
+          <img class="tcard-av" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&q=80" alt="Nisha R.">
+          <div>
+            <div class="tcard-name">Nisha Ranganathan</div>
+            <div class="tcard-role">Senior Engineer, Google · Fremont, CA</div>
+          </div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-origin">🇬🇧 London, UK</div>
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-quote">"My parents' home in Indiranagar needed a full renovation. Aurenza handled everything — BBMP sanction to interior fit-out. My parents are delighted and I followed every step from London."</p>
+        <div class="tcard-author">
+          <img class="tcard-av" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&q=80" alt="Arjun M.">
+          <div>
+            <div class="tcard-name">Arjun Menon</div>
+            <div class="tcard-role">Consultant · London · Renovation, Indiranagar</div>
+          </div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-origin">🇸🇬 Singapore</div>
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-quote">"The transparency was unlike anything I'd experienced with Indian builders before. Monthly cost reports, signed change orders, zero pressure — Aurenza treated my Koramangala home like their own."</p>
+        <div class="tcard-author">
+          <img class="tcard-av" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&q=80" alt="Kavya T.">
+          <div>
+            <div class="tcard-name">Kavya Thiruvengadam</div>
+            <div class="tcard-role">Finance Director · Singapore · Villa, Koramangala</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK TICKER -->
+<div class="dark-ticker">
+  <div class="dark-ticker-track">
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Transparent Billing</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Dedicated NRI Manager</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>3D Design Approvals</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Weekly Video Walkthroughs</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Zero Hidden Costs</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>BBMP &amp; RERA Compliance</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Power of Attorney Guidance</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Transparent Billing</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Dedicated NRI Manager</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>3D Design Approvals</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Weekly Video Walkthroughs</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Zero Hidden Costs</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>BBMP &amp; RERA Compliance</div>
+    <div class="dark-ticker-item"><span class="dt-dot"></span>Power of Attorney Guidance</div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section id="nri-faq">
+  <div class="faq-layout">
+    <div class="faq-left">
+      <span class="sec-eyebrow">Got Questions?</span>
+      <h2 class="sec-h2 reveal">Everything You<br>Need to <em>Know</em></h2>
+      <p class="sec-p reveal">Common questions from NRI clients considering their first build or renovation in Bengaluru. Don't see yours? Reach out and we'll respond within 24 hours.</p>
+      <a href="#cta" class="btn-primary reveal" style="margin-top:36px;display:inline-flex;">Ask Us Anything →</a>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q"><h4>Do I need to visit Bengaluru during the project?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>Not necessarily. Most of our NRI clients complete entire projects entirely remotely via video walkthroughs, digital approvals, and couriered documents. A visit is always welcome, but never required.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>How do I send money for the project from abroad?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>We accept NEFT, RTGS, and international wire transfers. All payments are invoiced and receipted. We guide you through FEMA-compliant fund transfers to ensure there are no legal complications.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>How do BBMP approvals work for NRI-owned properties?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>Our in-house legal team manages the entire BBMP plan sanction process on your behalf. We require a power of attorney from you — our team guides you on how to execute this correctly from abroad.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>What does a Dedicated NRI Project Manager do?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>One point-of-contact project manager who knows your project end-to-end. They adjust communication to your time zone, respond within 24 hours, and coordinate all internal teams on your behalf.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>How are design decisions made remotely?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>We share 3D renders, material boards, and finish samples digitally. Video calls for key design reviews, digital sign-offs at each milestone, and physical samples couriered to you when needed.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Do you manage the property after completion?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>Yes. Our post-handover property management covers maintenance, tenant sourcing and coordination, utility management, and regular condition reports — ideal for NRIs not returning immediately.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><h4>Which areas of Bengaluru do you build in?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body"><p>We operate across all of Bengaluru — Koramangala, Indiranagar, Whitefield, Sarjapur, JP Nagar, Jayanagar, Hebbal, and surrounding areas. We assess every site before committing to a project.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- POPUP CALCULATOR -->
+<div id="calcModal" class="calc-modal">
+
+  <div class="calc-modal-box">
+
+    <span class="calc-close" id="closeCalc">&times;</span>
+
+    <h2>Construction Cost Calculator</h2>
+
+    <div class="calc-field">
+      <label>Built-up Area (sq.ft)</label>
+      <input type="number" id="area" placeholder="Enter area">
+    </div>
+
+    <div class="calc-field">
+      <label>Select Package</label>
+      <select id="package">
+        <option value="1900">Valuable — ₹1900/sq.ft</option>
+        <option value="2300">Smart Choice — ₹2300/sq.ft</option>
+        <option value="2500">Premium — ₹2500/sq.ft</option>
+      </select>
+    </div>
+
+    <div class="calc-field">
+      <label>Select Currency</label>
+      <select id="currency">
+        <option value="INR">INR (₹)</option>
+        <option value="USD">USD ($)</option>
+        <option value="AED">AED (د.إ)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+      </select>
+    </div>
+
+    <div class="calc-result">
+      <div class="calc-label">Estimated Cost</div>
+      <div class="calc-value" id="total">₹ 0</div>
+    </div>
+
+  </div>
+
+</div>
+<!-- CTA -->
+<section id="cta">
+  <span class="sec-eyebrow">Start Your Journey</span>
+  <h2 class="sec-h2 reveal">Your Home in Bengaluru<br>Starts with <em>One Call.</em></h2>
+  <p class="sec-p reveal">Tell us your vision — we'll handle everything else. Schedule a free 45-minute consultation with our NRI desk. No obligations, no pressure.</p>
+  <div class="hero-btns reveal">
+    <a href="mailto:nri@aurenza.com" class="btn-gold">Book Your Free Consultation ↗</a>
+    <a href="https://wa.me/919845000000" class="btn-ghost-white">WhatsApp Us</a>
+  </div>
+  <div class="cta-contact-grid reveal">
+    <div class="cta-contact-card">
+      <div class="ccc-label">Email — NRI Desk</div>
+      <div class="ccc-val">nri@aurenza.com</div>
+      <div class="ccc-sub">Response within 24 hours</div>
+    </div>
+    <div class="cta-contact-card">
+      <div class="ccc-label">WhatsApp</div>
+      <div class="ccc-val">+91 98450 00000</div>
+      <div class="ccc-sub">Mon – Sat · 9:30am – 7pm IST</div>
+    </div>
+    <div class="cta-contact-card">
+      <div class="ccc-label">Video Call</div>
+      <div class="ccc-val">Schedule a Consultation</div>
+      <div class="ccc-sub">All time zones accommodated</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <span class="foot-brand">Aurenza<sup>®</sup></span>
+      <p class="foot-desc">Designing and building remarkable spaces across Bengaluru and beyond since 2004. Architecture, interiors, and construction — all under one roof.</p>
+      <div class="foot-social">
+        <a href="#" class="fsoc">in</a>
+        <a href="#" class="fsoc">ig</a>
+        <a href="#" class="fsoc">fb</a>
+        <a href="#" class="fsoc">yt</a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#">Architecture</a></li>
+        <li><a href="#">Construction</a></li>
+        <li><a href="#">Interiors</a></li>
+        <li><a href="#">Renovation</a></li>
+        <li><a href="#">NRI Services</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="aurenza_group_final.html#about">About Us</a></li>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="aurenza_group_final.html#projects">Projects</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>NRI Desk</h5>
+      <ul>
+        <li><a href="#">Koramangala, Bengaluru</a></li>
+        <li><a href="tel:+919845000000">+91 98450 00000</a></li>
+        <li><a href="mailto:nri@aurenza.com">nri@aurenza.com</a></li>
+        <li><a href="#">Mon – Sat · 9:30am – 7pm IST</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <span>© 2025 Aurenza Group. All rights reserved. · NRI Services</span>
+    <div class="foot-bar-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/919845000000" class="wa-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.031L.786 23.446a.5.5 0 0 0 .617.617l4.418-1.498A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.334 0-4.505-.68-6.326-1.847l-.454-.278-2.835.962.962-2.837-.278-.454A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
+<script>
+/* CURSOR */
+const curEl=document.getElementById('cur'),ringEl=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;curEl.style.left=mx+'px';curEl.style.top=my+'px';});
+(function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ringEl.style.left=rx+'px';ringEl.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.svc-row,.chal-card,.faq-q,.proc-step,.country-item,.cta-contact-card,.trust-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
+});
+
+/* NAV */
+const navEl=document.getElementById('nav');
+window.addEventListener('scroll',()=>navEl.classList.toggle('solid',window.scrollY>60),{passive:true});
+
+/* HERO PARALLAX */
+const heroImgEl=document.getElementById('heroImgEl'),heroWrap=document.getElementById('heroImg');
+const quoteBg=document.getElementById('quoteBg');
+window.addEventListener('scroll',()=>{
+  if(heroWrap){
+    const r=heroWrap.getBoundingClientRect(),vh=window.innerHeight;
+    const p=Math.max(0,Math.min(1,1-(r.bottom/(vh+r.height))));
+    heroImgEl.style.transform=`translateY(${p*-12}%)`;
+  }
+  if(quoteBg){
+    const r=document.getElementById('quoteBand').getBoundingClientRect(),vh=window.innerHeight;
+    const p=Math.max(0,Math.min(1,1-r.bottom/(vh+r.height)));
+    quoteBg.style.transform=`scale(1.15) translateY(${(p-.5)*18}%)`;
+  }
+},{passive:true});
+
+/* REVEAL ON SCROLL */
+const allReveal=document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+new IntersectionObserver((entries)=>{
+  let d=0;
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'),d);
+      d+=80;
+    }
+  });
+},{threshold:.08}).observe||allReveal.forEach(el=>{});
+const revObs=new IntersectionObserver((entries)=>{
+  let d=0;
+  entries.forEach(e=>{
+    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),d);d+=80;revObs.unobserve(e.target);}
+  });
+},{threshold:.08});
+allReveal.forEach(el=>revObs.observe(el));
+
+/* TESTIMONIALS */
+const tTrack=document.getElementById('tTrack');
+const tCards=Array.from(tTrack.querySelectorAll('.tcard'));
+let tIdx=0;
+function tSlideTo(i){
+  const w=tCards[0].offsetWidth+24;
+  tTrack.style.transform=`translateX(-${i*w}px)`;
+  tIdx=i;
+}
+document.getElementById('tNext').addEventListener('click',()=>tSlideTo((tIdx+1)%(tCards.length-1)));
+document.getElementById('tPrev').addEventListener('click',()=>tSlideTo(tIdx===0?tCards.length-2:tIdx-1));
+window.addEventListener('resize',()=>tSlideTo(tIdx));
+
+/* FAQ */
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement,wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+
+/* BADGE FLOAT */
+document.querySelectorAll('.h-badge').forEach((b,i)=>{
+  b.style.animation=`badgePop .6s ${1.2+i*.2}s cubic-bezier(.34,1.56,.64,1) forwards, float ${3+i*.4}s ${2.2+i*.2}s ease-in-out infinite`;
+  b.style.opacity='0';
+});
+
+/* MAP PULSE STAGGER */
+document.querySelectorAll('.map-pulse').forEach((dot,i)=>{
+  dot.querySelector&&null;
+  dot.style.setProperty('animation-delay',`${i*.35}s`);
+});
+
+
+// OPEN / CLOSE MODAL
+const modal = document.getElementById("calcModal");
+
+document.getElementById("openCalc").onclick = function(e) {
+  e.preventDefault();
+  modal.classList.add("active");
+};
+
+document.getElementById("closeCalc").onclick = function() {
+  modal.classList.remove("active");
+};
+
+// CLOSE ON OUTSIDE CLICK
+window.onclick = function(e) {
+  if (e.target === modal) {
+    modal.classList.remove("active");
+  }
+};
+
+// COST CALCULATION
+const rates = {
+  INR: 1,
+  USD: 0.012,
+  AED: 0.044,
+  EUR: 0.011,
+  GBP: 0.0095
+};
+
+const symbols = {
+  INR: "₹",
+  USD: "$",
+  AED: "د.إ",
+  EUR: "€",
+  GBP: "£"
+};
+
+function calculateCost() {
+  let area = document.getElementById("area").value;
+  let pkg = document.getElementById("package").value;
+  let currency = document.getElementById("currency").value;
+
+  if (!area || area <= 0) {
+    document.getElementById("total").innerText = "₹ 0";
+    return;
+  }
+
+  let total = area * pkg;
+  let converted = total * rates[currency];
+
+  document.getElementById("total").innerText =
+    symbols[currency] + " " + converted.toLocaleString();
+}
+
+// EVENTS
+document.getElementById("area").addEventListener("input", calculateCost);
+document.getElementById("package").addEventListener("change", calculateCost);
+document.getElementById("currency").addEventListener("change", calculateCost);
+
+
+</script>
+</body>
+</html>
